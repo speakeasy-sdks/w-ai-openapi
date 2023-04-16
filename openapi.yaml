@@ -1,0 +1,4013 @@
+openapi: 3.0.3
+info:
+  title: Writer Enterprise API
+  version: '1.6'
+servers:
+- url: https://enterprise-api.writer.com
+security:
+- apiKey: []
+x-speakeasy-name-override:
+- operationId: create*
+  methodNameOverride: create
+- operationId: update*
+  methodNameOverride: update
+- operationId: delete*
+  methodNameOverride: delete
+- operationId: find*
+  methodNameOverride: find
+- operationId: list*
+  methodNameOverride: list
+- operationId: get*
+  methodNameOverride: get
+x-speakeasy-globals:
+  parameters:
+    - name: organizationId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+tags: 
+  - name: Content
+    description: Methods related to Content
+  - name: Terminology
+    description: Methods related to Terminology
+  - name: Snippet
+    description: Methods related to Snippets
+  - name: Completions
+    description: Methods related to Completions
+  - name: Models
+    description: Methods related to Model
+  - name: CoWrite
+    description: Methods related to CoWrite
+  - name: Styleguide
+    description: Methods related to Styleguide
+  - name: AI Content Detector
+    description: Methods related to AI Content Detector
+  - name: Files
+    description: Methods related to Files
+  - name: ModelCustomization
+    description: Methods related to Model Customization
+  - name: Billing
+    description: Methods related to Billing
+  - name: User
+    description: Methods related to User
+  - name: Download the customized model
+    description: Methods related to Download the customized model
+paths:
+  /content/organization/{organizationId}/team/{teamId}/check:
+    post:
+      tags:
+      - Content
+      summary: Check your content against your preset styleguide.
+      operationId: contentCheck
+      x-speakeasy-name-override: check
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessedContent'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /content/organization/{organizationId}/team/{teamId}/correct:
+    post:
+      tags:
+      - Content
+      summary: Apply the style guide suggestions directly to your content.
+      operationId: contentCorrect
+      x-speakeasy-name-override: correct
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: X-Request-ID
+        in: header
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CorrectionResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /content/organization/{organizationId}/detect:
+    post:
+      tags:
+      - AI Content Detector
+      summary: Content detector api
+      operationId: detectContent
+      x-speakeasy-name-override: detect
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentDetectorRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContentDetectorResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /terminology/organization/{organizationId}/team/{teamId}:
+    get:
+      tags:
+      - Terminology
+      summary: Find terms
+      operationId: findTerms
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - approved
+          - banned
+          - pending
+      - name: term
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: partOfSpeech
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - noun
+          - verb
+          - adverb
+          - adjective
+      - name: tags
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: sortField
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - term
+          - creationTime
+          - modificationTime
+          - type
+      - name: sortOrder
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResult_FullTermWithUser'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+    put:
+      tags:
+      - Terminology
+      summary: Update terms
+      operationId: updateTerms
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: X-Request-ID
+        in: header
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTermsRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTermsResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+    post:
+      tags:
+      - Terminology
+      summary: Add terms
+      operationId: addTerms
+      x-speakeasy-name-override: add
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTermsRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTermsResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+    delete:
+      tags:
+      - Terminology
+      summary: Delete terms
+      operationId: deleteTerms
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: ids
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int64
+      - name: X-Request-ID
+        in: header
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /snippet/organization/{organizationId}/team/{teamId}:
+    get:
+      tags:
+      - Snippet
+      summary: Find snippets
+      operationId: findSnippets
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: shortcuts
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: tags
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: sortField
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - shortcut
+          - creationTime
+          - modificationTime
+      - name: sortOrder
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResult_SnippetWithUser'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+    put:
+      tags:
+      - Snippet
+      summary: Update snippets
+      operationId: updateSnippets
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: X-Request-ID
+        in: header
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SnippetUpdate'
+        required: false
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnippetWithUser'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+    delete:
+      tags:
+      - Snippet
+      summary: Delete snippets
+      operationId: deleteSnippets
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: ids
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: X-Request-ID
+        in: header
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /cowrite/organization/{organizationId}/team/{teamId}/generate:
+    post:
+      tags:
+      - CoWrite
+      summary: Generate content using predefined templates
+      operationId: Generate Content
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateTemplateRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Draft'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /cowrite/organization/{organizationId}/team/{teamId}/template/{templateId}:
+    get:
+      tags:
+      - CoWrite
+      summary: Get a list of your existing CoWrite templates
+      operationId: listTemplates
+      x-speakeasy-name-override: listTemplates
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: templateId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateDetailsResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /billing/subscription:
+    get:
+      tags:
+      - Billing
+      summary: Get your organization subscription details
+      operationId: getSubscriptionDetails
+      x-speakeasy-name-override: getSubscriptionDetails
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionPublicResponseApi'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /user:
+    get:
+      tags:
+      - User
+      summary: List users
+      operationId: listUsers
+      parameters:
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: sortField
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - id
+          - name
+          - creationTime
+          - deleted
+          - modificationTime
+          - email
+          - lastSeen
+      - name: sortOrder
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResult_UserPublicResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /styleguide/page:
+    get:
+      tags:
+      - Styleguide
+      summary: List your styleguide pages
+      operationId: listPages
+      x-speakeasy-name-override: listPages
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - live
+          - offline
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResult_PagePublicApiResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /styleguide/page/{pageId}:
+    get:
+      tags:
+      - Styleguide
+      summary: Page details
+      operationId: pageDetails
+      parameters:
+      - name: pageId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageWithSectionResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /llm/organization/{organizationId}/model:
+    get:
+      tags:
+      - Models
+      summary: List available LLM models
+      operationId: listModels
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerationModelsResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /llm/organization/{organizationId}/model/{modelId}/completions:
+    post:
+      tags:
+      - Completions
+      summary: Create completion for LLM model
+      operationId: createCompletion
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: modelId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompletionRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletionResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /llm/organization/{organizationId}/model/{modelId}/customization/{customizationId}/fetch:
+    get:
+      tags:
+      - Download the customized model
+      summary: Download your fine-tuned model (available only for Palmyra Base and Palmyra Large)
+      operationId: fetchCustomizedModelFile
+      x-speakeasy-name-override: fetchFile
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: modelId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: customizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers:
+            Content-Type:
+              required: true
+              schema:
+                type: string
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /llm/organization/{organizationId}/file:
+    get:
+      tags:
+      - Files
+      summary: List files
+      operationId: listFiles
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelFilesResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+    post:
+      tags:
+      - Files
+      summary: Upload file
+      operationId: uploadFile
+      x-speakeasy-name-override: upload
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadModelFileRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelFile'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /llm/organization/{organizationId}/file/{fileId}:
+    get:
+      tags:
+      - Files
+      summary: Get file
+      operationId: getFile
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: fileId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelFile'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+    delete:
+      tags:
+      - Files
+      summary: Delete file
+      operationId: deleteFile
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: fileId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /llm/organization/{organizationId}/model/{modelId}/customization:
+    get:
+      tags:
+      - ModelCustomization
+      summary: List model customizations
+      operationId: listModelCustomizations
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: modelId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomizationsResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+    post:
+      tags:
+      - ModelCustomization
+      summary: Create model customization
+      operationId: createModelCustomization
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: modelId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomizationRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelCustomization'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /llm/organization/{organizationId}/model/{modelId}/customization/{customizationId}:
+    get:
+      tags:
+      - ModelCustomization
+      summary: Get model customization
+      operationId: getModelCustomization
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: modelId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: customizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelCustomization'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+    delete:
+      tags:
+      - ModelCustomization
+      summary: Delete Model customization
+      operationId: deleteModelCustomization
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: modelId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: customizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /llm/organization/{organizationId}/model/{modelId}/customization/{customizationId}/completions:
+    post:
+      tags:
+      - Completions
+      summary: Create completion for LLM customization model
+      operationId: createModelCustomizationCompletion
+      x-speakeasy-name-override: createModelCustomizationCompletion
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: modelId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: customizationId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompletionRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletionResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+components:
+  schemas:
+    ApprovedTermExtensionCreate:
+      required:
+      - capitalize
+      - fixCommonMistakes
+      - fixCase
+      type: object
+      properties:
+        capitalize:
+          type: boolean
+        fixCommonMistakes:
+          type: boolean
+        fixCase:
+          type: boolean
+    PaginatedResult_FullTermWithUser:
+      required:
+      - totalCount
+      - pagination
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/FullTermWithUser'
+        totalCount:
+          type: integer
+          format: int64
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    TermMistakeCreate:
+      required:
+      - mistake
+      - caseSensitive
+      type: object
+      properties:
+        reference:
+          type: string
+        mistake:
+          type: string
+        pos:
+          type: string
+          enum:
+          - noun
+          - verb
+          - adverb
+          - adjective
+        caseSensitive:
+          type: boolean
+    SnippetUpdate:
+      required:
+      - id
+      - snippet
+      type: object
+      properties:
+        id:
+          type: string
+        snippet:
+          type: string
+        shortcut:
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnippetTagV2'
+    FailMessage:
+      required:
+      - description
+      - key
+      - extras
+      type: object
+      properties:
+        description:
+          type: string
+        key:
+          type: string
+        extras:
+          $ref: '#/components/schemas/Json'
+    SnippetWithUser:
+      required:
+      - linkedId
+      - id
+      - snippet
+      - creationTime
+      - modificationTime
+      - createdUser
+      - modifiedUser
+      type: object
+      properties:
+        id:
+          type: string
+        snippet:
+          type: string
+        shortcut:
+          type: string
+        description:
+          type: string
+        creationTime:
+          type: string
+          format: date-time
+        modificationTime:
+          type: string
+          format: date-time
+        createdUser:
+          $ref: '#/components/schemas/TerminologyUser'
+        modifiedUser:
+          $ref: '#/components/schemas/TerminologyUser'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnippetTagV2'
+    Pagination:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        limit:
+          type: integer
+    FailResponse:
+      required:
+      - tpe
+      - extras
+      type: object
+      properties:
+        tpe:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FailMessage'
+        extras:
+          $ref: '#/components/schemas/Json'
+    TermTagResponse:
+      required:
+      - id
+      - tag
+      - termId
+      - parentTagId
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        tag:
+          type: string
+        termId:
+          type: integer
+          format: int64
+        parentTagId:
+          type: integer
+          format: int64
+    TermExample:
+      required:
+      - termId
+      - termBankId
+      - example
+      - type
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        termId:
+          type: integer
+          format: int64
+        termBankId:
+          type: integer
+          format: int64
+        example:
+          type: string
+        type:
+          type: string
+          enum:
+          - good
+          - bad
+    FullLinkedTerm:
+      required:
+      - termId
+      - linkedTermId
+      - term
+      - caseSensitive
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        termId:
+          type: integer
+          format: int64
+        linkedTermId:
+          type: integer
+          format: int64
+        term:
+          type: string
+        pos:
+          type: string
+          enum:
+          - noun
+          - verb
+          - adverb
+          - adjective
+        caseSensitive:
+          type: boolean
+        approvedTermExtension:
+          $ref: '#/components/schemas/ApprovedTermExtension'
+    Json: {}
+    UpdateTermsRequest:
+      type: object
+      properties:
+        models:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermUpdate'
+        failHandling:
+          type: string
+          enum:
+          - accumulate
+          - validate
+          - skip
+          - validateOnly
+    LinkedTermCreate:
+      type: object
+      properties:
+        reference:
+          type: string
+        linkedTermId:
+          type: integer
+          format: int64
+    TermExampleCreate:
+      required:
+      - example
+      - type
+      type: object
+      properties:
+        example:
+          type: string
+        type:
+          type: string
+          enum:
+          - good
+          - bad
+    TermCreate:
+      required:
+      - term
+      - type
+      - caseSensitive
+      type: object
+      properties:
+        reference:
+          type: string
+        term:
+          type: string
+        type:
+          type: string
+          enum:
+          - approved
+          - banned
+          - pending
+        pos:
+          type: string
+          enum:
+          - noun
+          - verb
+          - adverb
+          - adjective
+        caseSensitive:
+          type: boolean
+        description:
+          type: string
+        highlight:
+          type: boolean
+        examples:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermExampleCreate'
+        mistakes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermMistakeCreate'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermTagCreate'
+        linkedTerms:
+          type: array
+          items:
+            $ref: '#/components/schemas/LinkedTermCreate'
+        approvedTermExtension:
+          $ref: '#/components/schemas/ApprovedTermExtensionCreate'
+    ApprovedTermExtension:
+      required:
+      - termId
+      - capitalize
+      - fixCommonMistakes
+      - fixCase
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        termId:
+          type: integer
+          format: int64
+        capitalize:
+          type: boolean
+        fixCommonMistakes:
+          type: boolean
+        fixCase:
+          type: boolean
+    PaginatedResult_SnippetWithUser:
+      required:
+      - totalCount
+      - pagination
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnippetWithUser'
+        totalCount:
+          type: integer
+          format: int64
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    CreateTermsRequest:
+      type: object
+      properties:
+        models:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermCreate'
+        failHandling:
+          type: string
+          enum:
+          - accumulate
+          - validate
+          - skip
+          - validateOnly
+    DeleteResponse:
+      required:
+      - deleted
+      type: object
+      properties:
+        deleted:
+          type: integer
+          format: int64
+    CreateTermsResponse:
+      type: object
+      properties:
+        models:
+          type: array
+          items:
+            $ref: '#/components/schemas/FullTermWithUser'
+        fails:
+          type: array
+          items:
+            $ref: '#/components/schemas/FailMessage'
+    TermMistake:
+      required:
+      - termId
+      - termBankId
+      - mistake
+      - caseSensitive
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        termId:
+          type: integer
+          format: int64
+        termBankId:
+          type: integer
+          format: int64
+        mistake:
+          type: string
+        pos:
+          type: string
+          enum:
+          - noun
+          - verb
+          - adverb
+          - adjective
+        caseSensitive:
+          type: boolean
+    SnippetTagV2:
+      required:
+      - tag
+      type: object
+      properties:
+        tag:
+          type: string
+    TermTagCreate:
+      required:
+      - tag
+      type: object
+      properties:
+        tag:
+          type: string
+    TermUpdate:
+      required:
+      - id
+      - term
+      - type
+      - caseSensitive
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        term:
+          type: string
+        type:
+          type: string
+          enum:
+          - approved
+          - banned
+          - pending
+        pos:
+          type: string
+          enum:
+          - noun
+          - verb
+          - adverb
+          - adjective
+        caseSensitive:
+          type: boolean
+        description:
+          type: string
+        highlight:
+          type: boolean
+        examples:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermExampleCreate'
+        mistakes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermMistakeCreate'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermTagCreate'
+        linkedTerms:
+          type: array
+          items:
+            $ref: '#/components/schemas/LinkedTermCreate'
+        approvedTermExtension:
+          $ref: '#/components/schemas/ApprovedTermExtensionCreate'
+    FullTermWithUser:
+      required:
+      - id
+      - termBankId
+      - term
+      - type
+      - caseSensitive
+      - highlight
+      - creationTime
+      - modificationTime
+      - createdUser
+      - modifiedUser
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        termBankId:
+          type: integer
+          format: int64
+        term:
+          type: string
+        type:
+          type: string
+          enum:
+          - approved
+          - banned
+          - pending
+        pos:
+          type: string
+          enum:
+          - noun
+          - verb
+          - adverb
+          - adjective
+        caseSensitive:
+          type: boolean
+        description:
+          type: string
+        highlight:
+          type: boolean
+        creationTime:
+          type: string
+          format: date-time
+        modificationTime:
+          type: string
+          format: date-time
+        createdUser:
+          $ref: '#/components/schemas/TerminologyUser'
+        modifiedUser:
+          $ref: '#/components/schemas/TerminologyUser'
+        examples:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermExample'
+        mistakes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermMistake'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TermTagResponse'
+        linkedTerms:
+          type: array
+          items:
+            $ref: '#/components/schemas/FullLinkedTerm'
+        backlinkedTerms:
+          type: array
+          items:
+            $ref: '#/components/schemas/FullLinkedTerm'
+        approvedTermExtension:
+          $ref: '#/components/schemas/ApprovedTermExtension'
+    TerminologyUser:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fullName:
+          type: string
+        email:
+          type: string
+    MagicRequestInput:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: array
+          items:
+            type: string
+    Draft:
+      required:
+      - organizationId
+      - teamId
+      - documentId
+      - templateId
+      - body
+      - inputs
+      - deleted
+      - createdUserId
+      - creationTime
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        organizationId:
+          type: integer
+          format: int64
+        teamId:
+          type: integer
+          format: int64
+        documentId:
+          type: string
+        templateId:
+          type: string
+        body:
+          type: string
+        title:
+          type: string
+        inputs:
+          $ref: '#/components/schemas/Json'
+        deleted:
+          type: boolean
+        createdUserId:
+          type: integer
+          format: int64
+        creationTime:
+          type: string
+          format: date-time
+    TemplateDetailsResponse:
+      required:
+      - id
+      - name
+      - categoryId
+      - creationTime
+      - modificationTime
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        categoryId:
+          type: integer
+          format: int64
+        inputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Input'
+        guideUrl:
+          type: string
+        creationTime:
+          type: string
+          format: date-time
+        modificationTime:
+          type: string
+          format: date-time
+    GenerateTemplateRequest:
+      required:
+      - templateId
+      type: object
+      properties:
+        templateId:
+          type: string
+        inputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/MagicRequestInput'
+    Input:
+      required:
+      - name
+      - type
+      - required
+      - dynamic
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - textbox
+          - textarea
+          - dropdown
+        help:
+          type: string
+        subtitle:
+          type: string
+        required:
+          type: boolean
+        options:
+          type: array
+          items:
+            type: string
+        dynamic:
+          type: boolean
+        minFields:
+          type: integer
+        maxFields:
+          type: integer
+        unitCopy:
+          type: string
+    SubscriptionPublicResponseApi:
+      required:
+      - subscriptionId
+      - meta
+      - createdAt
+      - seats
+      - productName
+      - status
+      - usage
+      type: object
+      properties:
+        subscriptionId:
+          type: string
+        meta:
+          $ref: '#/components/schemas/MetaData'
+        createdAt:
+          type: string
+          format: date-time
+        seats:
+          type: integer
+        productName:
+          type: string
+          enum:
+          - free
+          - pro
+          - team
+          - enterprise
+          - legacy
+        status:
+          type: string
+          enum:
+          - trialing
+          - active
+          - past_due
+          - incomplete
+          - incomplete_expired
+          - unpaid
+          - canceled
+        usage:
+          $ref: '#/components/schemas/Usage'
+    MetaData:
+      required:
+      - teamCount
+      - termsCount
+      - snippetsCount
+      - ssoAccess
+      - reporting
+      - portal
+      - styleguide
+      type: object
+      properties:
+        teamCount:
+          type: integer
+        termsCount:
+          type: integer
+        snippetsCount:
+          type: integer
+        ssoAccess:
+          type: boolean
+        reporting:
+          $ref: '#/components/schemas/Map_V'
+        portal:
+          $ref: '#/components/schemas/Map_V'
+        styleguide:
+          $ref: '#/components/schemas/Map_V'
+        tier:
+          type: string
+          enum:
+          - enterprise-1
+          - enterprise-2
+          - enterprise-3
+          - enterprise-4
+    Usage:
+      required:
+      - team
+      - user
+      - words
+      - coWriteWords
+      type: object
+      properties:
+        team:
+          $ref: '#/components/schemas/UsageItem'
+        user:
+          $ref: '#/components/schemas/UsageItem'
+        words:
+          $ref: '#/components/schemas/UsageItem'
+        coWriteWords:
+          $ref: '#/components/schemas/UsageItem'
+    Map_V:
+      type: object
+      additionalProperties:
+        type: string
+    UsageItem:
+      required:
+      - value
+      - limit
+      type: object
+      properties:
+        value:
+          type: integer
+          format: int64
+        limit:
+          type: integer
+          format: int64
+    UserPublicResponse:
+      required:
+      - id
+      - accountStatus
+      - firstName
+      - fullName
+      - createdAt
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        avatar:
+          type: string
+        accountStatus:
+          type: string
+          enum:
+          - invited
+          - signed_up
+        firstName:
+          type: string
+        lastName:
+          type: string
+        fullName:
+          type: string
+        email:
+          type: string
+        timezone:
+          type: string
+        lastSeenOnline:
+          type: string
+          format: date-time
+        invitedBy:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date-time
+    PaginatedResult_UserPublicResponse:
+      required:
+      - totalCount
+      - pagination
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPublicResponse'
+        totalCount:
+          type: integer
+          format: int64
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    SimpleUser:
+      required:
+      - id
+      - firstName
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+    PaginatedResult_PagePublicApiResponse:
+      required:
+      - totalCount
+      - pagination
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/PagePublicApiResponse'
+        totalCount:
+          type: integer
+          format: int64
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PagePublicApiResponse:
+      required:
+      - id
+      - title
+      - url
+      - status
+      - order
+      - createdAt
+      - updatedAt
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        url:
+          type: string
+        section:
+          $ref: '#/components/schemas/SectionInfo'
+        status:
+          type: string
+          enum:
+          - live
+          - offline
+        order:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          $ref: '#/components/schemas/SimpleUser'
+    SectionInfo:
+      required:
+      - id
+      - title
+      - url
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        url:
+          type: string
+    PageWithSectionResponse:
+      required:
+      - id
+      - title
+      - url
+      - status
+      - order
+      - createdAt
+      - updatedAt
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        url:
+          type: string
+        section:
+          $ref: '#/components/schemas/SectionInfo'
+        status:
+          type: string
+          enum:
+          - live
+          - offline
+        order:
+          type: integer
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          $ref: '#/components/schemas/SimpleUser'
+    ContentRequest:
+      required:
+      - content
+      - settings
+      type: object
+      properties:
+        content:
+          type: string
+        settings:
+          $ref: '#/components/schemas/ContentSettings'
+    ContentIssue:
+      required:
+      - from
+      - until
+      - service
+      type: object
+      properties:
+        from:
+          type: integer
+        until:
+          type: integer
+        service:
+          type: string
+          enum:
+          - common-mistakes
+          - banned-words
+          - dictionary
+          - gec
+          - infinitive
+          - spelling
+          - writing-style
+          - custom-rules
+          - sentence-case
+          - acronym
+          - oxford-comma
+          - ml-punctuation
+          - emojis
+          - gender-pronouns
+          - sensitivity
+          - plagiarism
+          - readability
+          - sentence-complexity
+          - vocabulary
+          - paragraph-length
+          - plain-language
+          - healthy-commn
+          - confidence
+          - data-loss-prevention
+          - hate-speech
+          - content-safeguards
+          - feedback
+          - claim
+          - quote
+          - gender-nouns
+          - gender-tone
+          - grammar
+          - punctuation-dark
+          - formatting
+          - twitter
+          - gec-dark
+          - gec-gpt3
+        suggestions:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        meta:
+          $ref: '#/components/schemas/Json'
+    ContentSettings:
+      required:
+      - passiveVoice
+      - wordiness
+      - unclearReference
+      - genderInclusivePronouns
+      - genderInclusiveNouns
+      - ageAndFamilyStatus
+      - disability
+      - genderIdentitySensitivity
+      - raceEthnicityNationalitySensitivity
+      - sexualOrientationSensitivity
+      - substanceUseSensitivity
+      - confidence
+      - healthyCommunication
+      - grammar
+      - spelling
+      - contentSafeguards
+      type: object
+      properties:
+        passiveVoice:
+          type: boolean
+        wordiness:
+          type: boolean
+        unclearReference:
+          type: boolean
+        genderInclusivePronouns:
+          type: boolean
+        genderInclusiveNouns:
+          type: boolean
+        ageAndFamilyStatus:
+          type: boolean
+        disability:
+          type: boolean
+        genderIdentitySensitivity:
+          type: boolean
+        raceEthnicityNationalitySensitivity:
+          type: boolean
+        sexualOrientationSensitivity:
+          type: boolean
+        substanceUseSensitivity:
+          type: boolean
+        confidence:
+          type: boolean
+        healthyCommunication:
+          type: boolean
+        grammar:
+          type: boolean
+        spelling:
+          type: boolean
+        contentSafeguards:
+          type: boolean
+    CorrectionResponse:
+      required:
+      - correct
+      type: object
+      properties:
+        correct:
+          type: string
+    ProcessedContent:
+      type: object
+      properties:
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentIssue'
+    ModelFile:
+      required:
+      - id
+      - name
+      - size
+      - numberOfSamples
+      - format
+      - createdAt
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        size:
+          type: integer
+          format: int64
+        numberOfSamples:
+          type: integer
+          format: int64
+        format:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    CreateCustomizationRequest:
+      required:
+      - name
+      - trainingDatasetFileId
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        promptTemplate:
+          type: string
+        trainingDatasetFileId:
+          type: string
+        validationDatasetFileId:
+          type: string
+        batchSize:
+          type: integer
+          format: int64
+        epochs:
+          type: integer
+          format: int64
+        learningRate:
+          type: number
+          format: double
+        additionalHyperParameters:
+          $ref: '#/components/schemas/HyperParameters'
+    CompletionRequest:
+      required:
+      - prompt
+      type: object
+      properties:
+        prompt:
+          type: string
+        minTokens:
+          type: integer
+          format: int64
+        maxTokens:
+          type: integer
+          format: int64
+        temperature:
+          type: number
+          format: double
+        topP:
+          type: number
+          format: double
+        stop:
+          type: array
+          items:
+            type: string
+        presencePenalty:
+          type: number
+          format: double
+        frequencyPenalty:
+          type: number
+          format: double
+        bestOf:
+          type: integer
+        logprobs:
+          type: integer
+        n:
+          type: integer
+    CompletionGenerationChoice:
+      required:
+      - text
+      type: object
+      properties:
+        text:
+          type: string
+        logprobs:
+          $ref: '#/components/schemas/CompletionGenerationChoiceLogprobs'
+    CompletionGenerationChoiceLogprobs:
+      type: object
+      properties:
+        tokens:
+          type: array
+          items:
+            type: string
+        tokenLogprobs:
+          type: array
+          items:
+            type: number
+            format: double
+        topLogprobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Map_V'
+        textOffset:
+          type: array
+          items:
+            type: integer
+    GenerationModelInfoResponse:
+      required:
+      - name
+      - id
+      - type
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - GPT
+          - Instruct
+    ModelCustomization:
+      required:
+      - id
+      - name
+      - baseModelId
+      - trainingDatasetFileId
+      - status
+      - createdAt
+      - updatedAt
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        baseModelId:
+          type: string
+        promptTemplate:
+          type: string
+        trainingDatasetFileId:
+          type: string
+        validationDatasetFileId:
+          type: string
+        batchSize:
+          type: integer
+          format: int64
+        epochs:
+          type: integer
+          format: int64
+        learningRate:
+          type: number
+          format: double
+        additionalHyperParameters:
+          $ref: '#/components/schemas/HyperParameters'
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    UploadModelFileRequest:
+      required:
+      - file
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+    ModelFilesResponse:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModelFile'
+    HyperParameters:
+      required:
+      - numVirtualTokens
+      type: object
+      properties:
+        numVirtualTokens:
+          type: integer
+          format: int64
+    GenerationModelsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenerationModelInfoResponse'
+    CompletionResponse:
+      type: object
+      properties:
+        choices:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompletionGenerationChoice'
+    CustomizationsResponse:
+      type: object
+      properties:
+        customizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModelCustomization'
+    ContentDetectorRequest:
+      required:
+      - input
+      type: object
+      properties:
+        input:
+          type: string
+    ContentDetectorResponse:
+      required:
+      - label
+      - score
+      type: object
+      properties:
+        label:
+          type: string
+          enum:
+          - fake
+          - real
+        score:
+          type: number
+          format: double
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: Authorization
+      in: header
