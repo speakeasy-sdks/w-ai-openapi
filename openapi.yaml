@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Writer Enterprise API
-  version: '1.6'
+  version: '1.7'
 servers:
 - url: https://enterprise-api.writer.com
 security:
@@ -27,7 +27,6 @@ x-speakeasy-globals:
       schema:
         type: integer
         format: int64
-
 tags: 
   - name: Content
     description: Methods related to Content
@@ -55,6 +54,9 @@ tags:
     description: Methods related to User
   - name: Download the customized model
     description: Methods related to Download the customized model
+  - name: document
+    description: Methods related to document
+
 paths:
   /content/organization/{organizationId}/team/{teamId}/check:
     post:
@@ -281,6 +283,220 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ContentDetectorResponse'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /organization/{organizationId}/team/{teamId}/document:
+    get:
+      tags:
+      - document
+      summary: List team documents
+      operationId: listTeamDocuments
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: sortField
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - title
+          - creationTime
+          - modificationTime
+          - modifiedByMeTime
+          - openedByMeTime
+      - name: sortOrder
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BriefDocuments'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+  /organization/{organizationId}/team/{teamId}/document/{documentId}:
+    get:
+      tags:
+      - document
+      summary: Get document details
+      operationId: getDocumentDetails
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
         '400':
           description: Bad Request
           headers:
@@ -4006,6 +4222,108 @@ components:
         score:
           type: number
           format: double
+    BriefDocument:
+      required:
+      - id
+      - organizationId
+      - teamId
+      - title
+      - score
+      - access
+      - creationTime
+      - modificationTime
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        organizationId:
+          type: integer
+          format: int64
+        teamId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        score:
+          type: integer
+          format: int64
+        access:
+          type: string
+          enum:
+          - private
+          - public
+          - shared
+        creationTime:
+          type: string
+          format: date-time
+        modificationTime:
+          type: string
+          format: date-time
+        createdUser:
+          $ref: '#/components/schemas/SimpleUser'
+        modifiedUser:
+          $ref: '#/components/schemas/SimpleUser'
+    Document:
+      required:
+      - id
+      - organizationId
+      - teamId
+      - title
+      - score
+      - access
+      - creationTime
+      - modificationTime
+      - content
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        organizationId:
+          type: integer
+          format: int64
+        teamId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        score:
+          type: integer
+          format: int64
+        access:
+          type: string
+          enum:
+          - private
+          - public
+          - shared
+        creationTime:
+          type: string
+          format: date-time
+        modificationTime:
+          type: string
+          format: date-time
+        createdUser:
+          $ref: '#/components/schemas/SimpleUser'
+        modifiedUser:
+          $ref: '#/components/schemas/SimpleUser'
+        content:
+          type: string
+    BriefDocuments:
+      required:
+      - totalCount
+      - pagination
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/BriefDocument'
+        totalCount:
+          type: integer
+          format: int64
+        pagination:
+          $ref: '#/components/schemas/Pagination'
   securitySchemes:
     apiKey:
       type: apiKey
