@@ -4043,19 +4043,24 @@ components:
         minTokens:
           type: integer
           format: int64
+          example: 1
         maxTokens:
           type: integer
           format: int64
+          example: 2048
         temperature:
           type: number
           format: double
+          example: 0.7
         topP:
           type: number
           format: double
+          example: 1
         stop:
           type: array
           items:
             type: string
+          example: ["the", "is", "and"]
         presencePenalty:
           type: number
           format: double
@@ -4064,6 +4069,7 @@ components:
           format: double
         bestOf:
           type: integer
+          example: 1
         logprobs:
           type: integer
         n:
