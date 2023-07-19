@@ -4047,7 +4047,7 @@ components:
         maxTokens:
           type: integer
           format: int64
-          example: 2048
+          example: 1024
         temperature:
           type: number
           format: double
