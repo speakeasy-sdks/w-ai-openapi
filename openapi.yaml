@@ -2032,6 +2032,97 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailResponse'
+  /llm/organization/{organizationId}/model/{modelId}/completions/stream:
+    post:
+      tags:
+      - Completions
+      summary: Create streaming completion for LLM model
+      operationId: stream
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: modelId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompletionRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/CompletionEvent'
+        '400':
+          description: Bad Request
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '401':
+          description: Unauthorized
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '403':
+          description: Forbidden
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '404':
+          description: Not Found
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
+        '500':
+          description: Internal Server Error
+          headers:
+            Action-Id:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailResponse'
   /llm/organization/{organizationId}/model/{modelId}/customization/{customizationId}/fetch:
     get:
       tags:
@@ -4204,6 +4295,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CompletionGenerationChoice'
+    CompletionEvent:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          required: [value]
+          properties:
+            value:
+              type: string
     CustomizationsResponse:
       type: object
       properties:
